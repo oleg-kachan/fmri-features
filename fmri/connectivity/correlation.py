@@ -12,10 +12,10 @@ class CorrelationConnectivity():
         if estimator=="corrcoef":
             A = np.corrcoef(self.ts.T)
         elif estimator=="maximum_likelihood":
-            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=EmpiricalCovariance(store_precision=False, assume_centered=assume_centered))
+            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=EmpiricalCovariance(assume_centered=assume_centered))
             A = correlation_measure.fit_transform([self.ts])[0]
         elif estimator=="ledoit_wolf":
-            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=LedoitWolf(store_precision=False, assume_centered=assume_centered, block_size=1000))
+            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=LedoitWolf(assume_centered=assume_centered))
             A = correlation_measure.fit_transform([self.ts])[0]
         else:
             raise ValueError("Estimator should be 'corrcoef', 'maximum_likelihood', or 'ledoit_wolf'")
