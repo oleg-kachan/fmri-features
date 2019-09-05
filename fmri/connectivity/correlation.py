@@ -1,16 +1,23 @@
 import numpy as np
 
+from nilearn.connectome import ConnectivityMeasure
+from sklearn.covariance import EmpiricalCovariance, LedoitWolf
+
 import fmri.connectivity.correlation
 
 class CorrelationConnectivity():
 
-    def correlation(self, estimator="maximum_likelihood"):
+    def correlation(self, estimator="maximum_likelihood", assume_centered=False):
 
-        if estimator=="maximum_likelihood":
-            A = np.corrcoef(self.ts)
+        if estimator=="corrcoef":
+            A = np.corrcoef(self.ts.T)
+        elif estimator=="maximum_likelihood":
+            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=EmpiricalCovariance(store_precision=False, assume_centered=assume_centered))
+            A = correlation_measure.fit_transform([self.ts])[0]
         elif estimator=="ledoit_wolf":
-            raise NotImplementedError # TODO
+            correlation_measure = ConnectivityMeasure(kind="correlation", cov_estimator=LedoitWolf(store_precision=False, assume_centered=assume_centered, block_size=1000))
+            A = correlation_measure.fit_transform([self.ts])[0]
         else:
-            raise ValueError("Estimator should be 'maximum_likelihood' or 'ledoit_wolf'")
+            raise ValueError("Estimator should be 'corrcoef', 'maximum_likelihood', or 'ledoit_wolf'")
 
         return A
