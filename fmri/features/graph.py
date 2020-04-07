@@ -3,14 +3,13 @@ from scipy.linalg import fractional_matrix_power as powm
 
 import networkx as nx
 
-from GraphRicciCurvature.OllivierRicci import OllivierRicci
-from GraphRicciCurvature.FormanRicci import FormanRicci
+#from GraphRicciCurvature.OllivierRicci import OllivierRicci
+#from GraphRicciCurvature.FormanRicci import FormanRicci
 
 class GraphFeatureExtractor():
 
-    def __init__(self, G, cache=False):
-        self.G = G
-        self.cache = cache
+    def __init__(self, A):
+        self.G = nx.from_numpy_array(A)
 
     def degree(self):
         return np.array(nx.degree(self.G, weight="weight"))[:,1]
@@ -37,7 +36,7 @@ class GraphFeatureExtractor():
         return nx.average_shortest_path_length(self.G, weight="weight")
 
     def global_efficiency(self):
-        return nx.global_efficiency(self.G)
+        return np.array(nx.global_efficiency(self.G)).reshape(1)
 
     def ollivier_ricci_curvature(self, alpha=0.5):
         return OllivierRicci(self.G, alpha=alpha, verbose="INFO").compute_ricci_curvature()

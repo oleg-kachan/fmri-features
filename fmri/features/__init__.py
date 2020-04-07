@@ -15,6 +15,6 @@ class FeatureExtractor(
     topological.TopologicalFeatureExtractor
     ):
 
-    def __init__(self, G, cache=False):
-        self.G = G
+    def __init__(self, A, cache=False):
+        self.A = A
         self.cache = cache
